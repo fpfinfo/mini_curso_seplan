@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mini Curso – Suprimento de Fundos</title>
+    <style>
+      :root {
+        --primary: #003366;
+        --secondary: #ffc107;
+        --bg: #ffffff;
+        --text: #000000;
+        --light: #ffffff;
+        --accent: #e0e0e0;
+        --transition: 0.3s ease;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        font-size: 18px;
+      }
+      header {
+        background: var(--primary);
+        color: var(--light);
+        text-align: center;
+        padding: 2rem 1rem 1.5rem;
+      }
+      /* Ícone do Tribunal em círculo */
+      .header-icon {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
+      }
+      .header-icon img {
+        height: 80px;
+        width: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        transition: transform var(--transition), box-shadow var(--transition);
+      }
+      .header-icon img:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      }
+      header h1 {
+        font-size: 2.4rem;
+        margin-bottom: 0.5rem;
+      }
+      header p {
+        font-size: 1.2rem;
+        opacity: 0.95;
+      }
+
+      /* === Tabs === */
+      .tabs {
+        width: 90%;
+        max-width: 1000px;
+        margin: 2rem auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        background: var(--bg);
+        overflow: hidden;
+      }
+      .tabs input {
+        display: none;
+      }
+      .tabs nav {
+        display: flex;
+        background: var(--accent);
+        border-bottom: 2px solid #ddd;
+      }
+      .tabs nav label {
+        flex: 1;
+        padding: 1.2rem;
+        text-align: center;
+        cursor: pointer;
+        font-weight: bold;
+        background: var(--accent);
+        color: var(--text);
+        transition: background var(--transition), color var(--transition);
+        font-size: 1.1rem;
+      }
+      .tabs nav label:hover {
+        background: #e8e8e8;
+      }
+      /* Aba ativa */
+      #tab-apresentacao:checked ~ nav label[for="tab-apresentacao"],
+      #tab-solicitacao:checked ~ nav label[for="tab-solicitacao"],
+      #tab-execucao:checked ~ nav label[for="tab-execucao"],
+      #tab-prestacao:checked ~ nav label[for="tab-prestacao"] {
+        background: var(--primary);
+        color: var(--light);
+        border-bottom: 4px solid var(--secondary);
+      }
+
+      .tab-content {
+        display: none;
+        padding: 2.5rem;
+      }
+      /* Mostrar conteúdo ativo */
+      #tab-apresentacao:checked ~ #apresentacao,
+      #tab-solicitacao:checked ~ #solicitacao,
+      #tab-execucao:checked ~ #execucao,
+      #tab-prestacao:checked ~ #prestacao {
+        display: block;
+      }
+
+      /* === Slider interno (ajustado) === */
+      .slider {
+        position: relative;
+        overflow: hidden;
+        height: 50vh;
+        min-height: 300px;
+        max-height: 600px;
+        margin-bottom: 1.5rem;
+      }
+      .slides {
+        display: flex;
+        transition: transform 0.5s ease;
+        height: 100%;
+      }
+      .slide {
+        min-width: 100%;
+        padding: 2rem;
+        background: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+        overflow-y: auto;
+      }
+      .slide h2 {
+        margin-bottom: 1rem;
+        color: var(--primary);
+        font-size: 2rem;
+      }
+      .slide p,
+      .slide ul li {
+        font-size: 1.15rem;
+      }
+      .slide ul {
+        list-style: disc inside;
+        margin-top: 0.75rem;
+      }
+      .slide ul li {
+        margin-bottom: 0.75rem;
+      }
+      .slider-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        display: flex;
+        gap: 0.5rem;
+      }
+      .slider-btn button {
+        background: var(--primary);
+        border: none;
+        color: var(--light);
+        padding: 0.6rem 0.9rem;
+        font-size: 1.4rem;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background var(--transition), transform var(--transition);
+      }
+      .slider-btn button:hover {
+        background: #002244;
+        transform: scale(1.1);
+      }
+      .slider-dots {
+        position: absolute;
+        bottom: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 0.5rem;
+      }
+      .slider-dots button {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: none;
+        background: #ccc;
+        cursor: pointer;
+        transition: background var(--transition);
+      }
+      .slider-dots button.active {
+        background: var(--primary);
+      }
+
+      /* Botões externos para formulários */
+      .form-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+      .form-buttons button {
+        background: var(--secondary);
+        color: var(--text);
+        border: none;
+        padding: 0.75rem 1.25rem;
+        font-size: 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background var(--transition);
+      }
+      .form-buttons button:hover {
+        background: #e0a800;
+      }
+
+      @media (max-width: 600px) {
+        body {
+          font-size: 16px;
+        }
+        header {
+          padding: 1.5rem 0.5rem 1rem;
+        }
+        .header-icon img {
+          height: 60px;
+          width: 60px;
+        }
+        header h1 {
+          font-size: 1.8rem;
+        }
+        header p {
+          font-size: 1rem;
+        }
+        .tabs nav label {
+          padding: 0.8rem;
+          font-size: 1rem;
+        }
+        .tab-content {
+          padding: 1.5rem;
+        }
+        .slider {
+          height: auto;
+          max-height: none;
+        }
+        .slide {
+          padding: 1.2rem;
+        }
+        .slide h2 {
+          font-size: 1.6rem;
+        }
+        .slider-btn {
+          top: 0.5rem;
+          right: 0.5rem;
+        }
+        .slider-btn button {
+          font-size: 1.2rem;
+          padding: 0.5rem 0.7rem;
+        }
+        .slider-dots {
+          bottom: 0.5rem;
+        }
+        .slider-dots button {
+          width: 10px;
+          height: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-icon">
+        <img
+          src="https://tse3.mm.bing.net/th?id=OIP.pLX8nJ-4tvBr-DXIPNti-QAAAA&cb=iwc1&w=400&h=400&c=7"
+          alt="Ícone do Tribunal de Justiça do Pará"
+        />
+      </div>
+      <h1>Mini Curso de Suprimento de Fundos</h1>
+      <p>
+        Tribunal de Justiça do Pará – SEPLAN – Serviço de Suprimento de Fundos
+      </p>
+    </header>
+
+    <div class="tabs">
+      <!-- Rádios para abas -->
+      <input type="radio" name="tabs" id="tab-apresentacao" checked />
+      <input type="radio" name="tabs" id="tab-solicitacao" />
+      <input type="radio" name="tabs" id="tab-execucao" />
+      <input type="radio" name="tabs" id="tab-prestacao" />
+
+      <nav>
+        <label for="tab-apresentacao">Apresentação</label>
+        <label for="tab-solicitacao">Solicitação</label>
+        <label for="tab-execucao">Execução</label>
+        <label for="tab-prestacao">Prestação de Contas</label>
+      </nav>
+
+      <!-- Apresentação (igual) -->
+      <section id="apresentacao" class="tab-content">
+        <div class="slider">
+          <div class="slides">
+            <div class="slide">
+              <h2>Bem‑vindo!</h2>
+              <p>
+                Este mini curso guia você, de forma prática e visionária, por
+                todo o ciclo de movimentação e gestão de recursos — da
+                solicitação até a prestação de contas — garantindo velocidade,
+                segurança e total transparência.
+              </p>
+            </div>
+            <div class="slide">
+              <h2>Finalidade do Curso</h2>
+              <ul>
+                <li>Entender o fluxo completo de Suprimento de Fundos;</li>
+                <li>Preencher corretamente formulários e relatórios;</li>
+                <li>Atuar em conformidade com normas e legislações;</li>
+                <li>Assegurar rastreabilidade e prestação de contas eficaz;</li>
+                <li>Promover eficiência e controle dos recursos públicos.</li>
+              </ul>
+            </div>
+            <div class="slide">
+              <h2>Quem Somos</h2>
+              <p><strong>Ordenadores de Despesa:</strong></p>
+              <ul>
+                <li>Miguel Lucivaldo Alves Santos – Secretário da SEPLAN</li>
+                <li>
+                  Anailton Paulo de Alencar – Secretário‑Adjunto da SEPLAN
+                </li>
+              </ul>
+              <p><strong>Equipe:</strong></p>
+              <ul>
+                <li>Fábio Pereira de Freitas – Chefe do Serviço</li>
+                <li>André Evaristo Bezerra Lourenço</li>
+                <li>Roziani Rodrigues Mendonça Lopes</li>
+                <li>Jaires Costa Sarraf</li>
+                <li>Regeane Kelly Holanda do Carmo</li>
+              </ul>
+            </div>
+            <div class="slide">
+              <h2>Estrutura do Curso</h2>
+              <ul>
+                <li>Módulo 1: Apresentação e Conceitos Gerais</li>
+                <li>Módulo 2: Processo de Solicitação</li>
+                <li>Módulo 3: Execução das Despesas</li>
+                <li>Módulo 4: Prestação de Contas e Acompanhamento</li>
+              </ul>
+            </div>
+            <div class="slide">
+              <h2>Contato e Suporte</h2>
+              <p>Para dúvidas ou assistência:</p>
+              <ul>
+                <li>Email: suprimento@tjpa.jus.br</li>
+                <li>Plataforma: Microsoft Teams</li>
+                <li>Atendimento: Segunda a sexta, 8h às 17h</li>
+              </ul>
+            </div>
+          </div>
+          <div class="slider-btn">
+            <button class="prev-btn">❮</button>
+            <button class="next-btn">❯</button>
+          </div>
+          <div class="slider-dots"></div>
+        </div>
+      </section>
+
+      <!-- Detalhamento da Solicitação com slider e botões -->
+      <section id="solicitacao" class="tab-content">
+        <div class="slider">
+          <div class="slides">
+            <div class="slide">
+              <h2>Documentação Necessária</h2>
+              <ul>
+                <li>Formulário de Solicitação preenchido;</li>
+                <li>Justificativa detalhada do uso dos recursos;</li>
+                <li>Orçamentos (quando necessário);</li>
+                <li>Dados bancários do servidor (agente suprido);</li>
+                <li>
+                  Certidão de Atesto (Magistrado, Diretor ou Coordenador).
+                </li>
+              </ul>
+            </div>
+            <div class="slide">
+              <h2>Instruções de Preenchimento (Formulário de Solicitação)</h2>
+              <ul>
+                <li><strong>Nome:</strong> Nome completo do solicitante;</li>
+                <li><strong>Matrícula:</strong> Número de matrícula;</li>
+                <li><strong>Finalidade:</strong> Descrição do objeto;</li>
+                <li>
+                  <strong>Dados bancários:</strong> Banco; Agencia e Conta
+                  Corrente;
+                </li>
+                <li><strong>Valor:</strong> Valor solicitado em R$;</li>
+                <li>
+                  <strong>Período:</strong> Data de início e fim da despesa.
+                </li>
+                <li>
+                  <strong>Observação:</strong> A solicitação deverá ser encaminha com no máximo 7 dias antes da realização da data de realização da despesa.
+                </li>
+              </ul>
+            </div>
+            <div class="slide">
+              <h2>Formulário Modelo de Solicitação</h2>
+              <p>Clique no botão abaixo para abrir o modelo:</p>
+              <div class="form-buttons">
+                <button
+                  onclick="window.open('modelo-solicitacao.html','_blank')"
+                >
+                  Abrir Formulário de Solicitação
+                </button>
+              </div>
+            </div>
+            <div class="slide">
+              <h2>Modelo de Certidão de Atesto</h2>
+              <p>Clique no botão abaixo para emitir a certidão:</p>
+              <div class="form-buttons">
+                <button onclick="window.open('modelo-certidao.html','_blank')">
+                  Abrir Certidão de Atesto
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="slider-btn">
+            <button class="prev-btn">❮</button>
+            <button class="next-btn">❯</button>
+          </div>
+          <div class="slider-dots"></div>
+        </div>
+      </section>
+
+      <!-- Execução -->
+      <section id="execucao" class="tab-content">
+        <h2>Etapa de Execução</h2>
+        <ol>
+          <li>Recebimento dos recursos;</li>
+          <li>Realização das despesas;</li>
+          <li>Guarda dos documentos;</li>
+          <li>Registro no sistema.</li>
+        </ol>
+      </section>
+
+      <!-- Prestação de Contas -->
+      <section id="prestacao" class="tab-content">
+        <h2>Prestação de Contas</h2>
+        <ul>
+          <li>Organizar documentos;</li>
+          <li>Preencher relatório;</li>
+          <li>Protocolar no SEI;</li>
+          <li>Acompanhar validação.</li>
+        </ul>
+      </section>
+    </div>
+
+    <script>
+      // Inicializa todos os sliders
+      document.querySelectorAll(".slider").forEach((slider) => {
+        const slidesEl = slider.querySelector(".slides");
+        const slides = slider.querySelectorAll(".slide");
+        const dotsContainer = slider.querySelector(".slider-dots");
+        const prevBtn = slider.querySelector(".prev-btn");
+        const nextBtn = slider.querySelector(".next-btn");
+        const total = slides.length;
+        let idx = 0;
+
+        // Cria os bullets/dots
+        slides.forEach((_, i) => {
+          const dot = document.createElement("button");
+          dot.addEventListener("click", () => {
+            idx = i;
+            update();
+          });
+          dotsContainer.append(dot);
+        });
+
+        function update() {
+          slidesEl.style.transform = `translateX(-${idx * 100}%)`;
+          dotsContainer.querySelectorAll("button").forEach((d, i) => {
+            d.classList.toggle("active", i === idx);
+          });
+        }
+
+        nextBtn.addEventListener("click", () => {
+          idx = (idx + 1) % total;
+          update();
+        });
+        prevBtn.addEventListener("click", () => {
+          idx = (idx - 1 + total) % total;
+          update();
+        });
+
+        // Marca o primeiro dot como ativo
+        dotsContainer.querySelector("button").classList.add("active");
+      });
+    </script>
+  </body>
+</html>
