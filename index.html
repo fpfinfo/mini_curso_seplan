@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Serviço de Suprimento de Fundos</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Segoe+UI&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      crossorigin="anonymous"
+    />
+    <style>
+      :root {
+        --primary: #003366;
+        --secondary: #ffc107;
+        --bg: #ffffff;
+        --text: #000000;
+        --light: #f4f4f4;
+        --accent: #e0e0e0;
+        --shadow: rgba(0, 0, 0, 0.1);
+      }
+
+      .speaker-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--primary);
+}
+
+.speaker-button:hover {
+  color: var(--secondary);
+}
+
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #121212;
+          --text: #f0f0f0;
+          --light: #1e1e1e;
+          --accent: #333;
+          --shadow: rgba(255, 255, 255, 0.1);
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        transition: background 0.4s ease, color 0.4s ease;
+      }
+
+      header {
+        background-color: var(--primary);
+        color: white;
+        padding: 1rem;
+        text-align: center;
+        box-shadow: 0 4px 6px var(--shadow);
+      }
+
+      header img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        margin-bottom: 0.5rem;
+      }
+
+      nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  justify-content: center;
+  background: var(--secondary);
+  gap: 1px;
+}
+
+nav button {
+  background: transparent;
+  border: none;
+  padding: 1rem 0.5rem;
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--primary);
+  text-align: center;
+  transition: background 0.3s ease;
+  width: 100%;
+}
+
+
+      nav button:hover {
+        background-color: #ffe082;
+      }
+
+      .tab-content {
+        display: none;
+        padding: 2rem;
+        animation: fadeIn 0.5s ease;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .slider {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--accent);
+        border-radius: 12px;
+        padding: 2rem;
+        background: var(--light);
+        box-shadow: 0 2px 6px var(--shadow);
+        margin-bottom: 2rem;
+        min-height: 320px;
+        font-size: 1.35rem;
+        line-height: 1.8;
+      }
+
+      .slider strong {
+        font-size: 1.45rem;
+      }
+
+      .slide {
+        display: none;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+
+      .slide.active {
+        display: block;
+        opacity: 1;
+      }
+
+      .slider-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1.5rem;
+      }
+
+      .slider-buttons button {
+        padding: 0.75rem 1.25rem;
+        font-size: 1.1rem;
+        font-weight: bold;
+        background-color: var(--secondary);
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        color: var(--primary);
+      }
+
+      .slider-buttons button:hover {
+        background-color: #ffdb4d;
+      }
+
+      .dots {
+        text-align: center;
+        margin-top: 1rem;
+      }
+
+      .dot {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        margin: 0 6px;
+        border-radius: 50%;
+        background: var(--accent);
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      .dot.active {
+        background: var(--primary);
+      }
+
+      .counter {
+        text-align: center;
+        font-size: 1rem;
+        color: var(--text);
+        margin-top: 0.75rem;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .card {
+        background: var(--light);
+        border: 1px solid var(--accent);
+        border-radius: 8px;
+        padding: 1.2rem;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px var(--shadow);
+      }
+
+      .card i {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        color: var(--primary);
+      }
+
+      .card a {
+        display: block;
+        margin-top: 0.5rem;
+        color: var(--secondary);
+        font-weight: bold;
+        text-decoration: none;
+      }
+
+      .card a:hover {
+        text-decoration: underline;
+      }
+
+      .cards-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+      }
+
+      @media screen and (min-width: 1200px) {
+  .cards-group.videoaulas-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+    </style>
+  </head>
+  <body>
+    <header>
+      <img
+        src="https://tse3.mm.bing.net/th?id=OIP.pLX8nJ-4tvBr-DXIPNti-QAAAA&cb=iwc1&w=400&h=400&c=7"
+        alt="Logo TJPA"
+      />
+      <h1>Serviço de Suprimento de Fundos</h1>
+      <p>Tribunal de Justiça do Estado do Pará</p>
+    </header>
+
+    <nav>
+      <button onclick="showTab('apresentacao')">Apresentação</button>
+      <button onclick="showTab('solicitacao')">Solicitação</button>
+      <button onclick="showTab('execucao')">Execução</button>
+      <button onclick="showTab('prestacao')">Prestação de Contas</button>
+      <button onclick="showTab('modelos')">Modelos de Formulários</button>
+      <button onclick="showTab('videoaulas')">Videoaulas</button>
+    </nav>
+
+    <main>
+      <section id="apresentacao" class="tab-content active">
+        <div class="slider" id="slider-apresentacao"></div>
+      </section>
+      <section id="solicitacao" class="tab-content">
+        <div class="slider" id="slider-solicitacao"></div>
+      </section>
+      <section id="execucao" class="tab-content">
+        <div class="slider" id="slider-execucao"></div>
+      </section>
+      <section id="prestacao" class="tab-content">
+        <div class="slider" id="slider-prestacao"></div>
+      </section>
+
+      <section id="modelos" class="tab-content">
+        <h2>📂 Modelos de Formulários</h2>
+
+        <div class="cards-group">
+          <div class="card">
+            <i class="fas fa-file-alt"></i>
+            <div>Solicitação Extra-Emergencial</div>
+            <a
+              href="https://fpfinfo.github.io/solicitacao01/"
+              target="_blank"
+              rel="noopener"
+              >Acessar</a
+            >
+          </div>
+          <div class="card">
+            <i class="fas fa-file-invoice"></i>
+            <div>Projeção do Júri</div>
+            <a href="#">Acessar</a>
+          </div>
+          <div class="card">
+            <i class="fas fa-receipt"></i>
+            <div>Recibo de Entrega</div>
+            <a href="#">Acessar</a>
+          </div>
+          <div class="card">
+            <i class="fas fa-file-signature"></i>
+            <div>Termo de Responsabilidade</div>
+            <a href="#">Acessar</a>
+          </div>
+          <div class="card">
+            <i class="fas fa-money-check-alt"></i>
+            <div>Relatório de Gastos</div>
+            <a href="#">Acessar</a>
+          </div>
+        </div>
+
+        <div class="cards-group">
+          <div class="card">
+            <i class="fas fa-clipboard-check"></i>
+            <div>Checklist de Execução</div>
+            <a href="#">Acessar</a>
+          </div>
+          <div class="card">
+            <i class="fas fa-file-export"></i>
+            <div>Solicitação Emergencial</div>
+            <a href="#">Acessar</a>
+          </div>
+          <div class="card">
+            <i class="fas fa-user-shield"></i>
+            <div>Autorização da Chefia</div>
+            <a href="#">Acessar</a>
+          </div>
+          <div class="card">
+            <i class="fas fa-folder-open"></i>
+            <div>Documentação Complementar</div>
+            <a href="#">Acessar</a>
+          </div>
+          <div class="card">
+            <i class="fas fa-file-medical"></i>
+            <div>Formulário de Avaliação</div>
+            <a href="#">Acessar</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="videoaulas" class="tab-content">
+  <h2>🎥 Videoaulas</h2>
+  <div class="cards-group videoaulas-grid">
+    <div class="card"><i class="fab fa-youtube"></i><div>Introdução ao Suprimento de Fundos</div><a href="https://www.youtube.com/watch?v=abcd1234" target="_blank">Assistir</a></div>
+    <div class="card"><i class="fab fa-youtube"></i><div>Fluxo de Solicitação no TJPA</div><a href="https://www.youtube.com/watch?v=abcd1235" target="_blank">Assistir</a></div>
+    <div class="card"><i class="fab fa-youtube"></i><div>Execução: Boas Práticas</div><a href="https://www.youtube.com/watch?v=abcd1236" target="_blank">Assistir</a></div>
+    <div class="card"><i class="fab fa-youtube"></i><div>Checklist para Supridos</div><a href="https://www.youtube.com/watch?v=abcd1237" target="_blank">Assistir</a></div>
+    <div class="card"><i class="fab fa-youtube"></i><div>Como Preencher o Formulário</div><a href="https://www.youtube.com/watch?v=abcd1238" target="_blank">Assistir</a></div>
+    <div class="card"><i class="fab fa-youtube"></i><div>Casos Reais de Glosas</div><a href="https://www.youtube.com/watch?v=abcd1239" target="_blank">Assistir</a></div>
+
+    <div class="card"><i class="fab fa-youtube"></i><div>Prestação de Contas</div><a href="https://www.youtube.com/watch?v=abcd1240" target="_blank">Assistir</a></div>
+    <div class="card"><i class="fab fa-youtube"></i><div>Manual do Executor</div><a href="https://www.youtube.com/watch?v=abcd1241" target="_blank">Assistir</a></div>
+    <div class="card"><i class="fab fa-youtube"></i><div>Suprimento Emergencial</div><a href="https://www.youtube.com/watch?v=abcd1242" target="_blank">Assistir</a></div>
+    <div class="card"><i class="fab fa-youtube"></i><div>Casos Práticos</div><a href="https://www.youtube.com/watch?v=abcd1243" target="_blank">Assistir</a></div>
+    <div class="card"><i class="fab fa-youtube"></i><div>Auditoria e Controle</div><a href="https://www.youtube.com/watch?v=abcd1244" target="_blank">Assistir</a></div>
+    <div class="card"><i class="fab fa-youtube"></i><div>Certificação e Avaliação</div><a href="https://www.youtube.com/watch?v=abcd1245" target="_blank">Assistir</a></div>
+
+    <div class="card"><i class="fab fa-youtube"></i><div>Planejamento Orçamentário</div><a href="https://www.youtube.com/watch?v=abcd1246" target="_blank">Assistir</a></div>
+    <div class="card"><i class="fab fa-youtube"></i><div>Erros Comuns na Execução</div><a href="https://www.youtube.com/watch?v=abcd1247" target="_blank">Assistir</a></div>
+    <div class="card"><i class="fab fa-youtube"></i><div>Relatório de Gastos</div><a href="https://www.youtube.com/watch?v=abcd1248" target="_blank">Assistir</a></div>
+    <div class="card"><i class="fab fa-youtube"></i><div>Importância da Nota Fiscal</div><a href="https://www.youtube.com/watch?v=abcd1249" target="_blank">Assistir</a></div>
+    <div class="card"><i class="fab fa-youtube"></i><div>Como Evitar Glosas</div><a href="https://www.youtube.com/watch?v=abcd1250" target="_blank">Assistir</a></div>
+    <div class="card"><i class="fab fa-youtube"></i><div>Gestão Transparente</div><a href="https://www.youtube.com/watch?v=abcd1251" target="_blank">Assistir</a></div>
+
+    <div class="card"><i class="fab fa-youtube"></i><div>Ofício e Comunicação Formal</div><a href="https://www.youtube.com/watch?v=abcd1252" target="_blank">Assistir</a></div>
+    <div class="card"><i class="fab fa-youtube"></i><div>Controle de Documentação</div><a href="https://www.youtube.com/watch?v=abcd1253" target="_blank">Assistir</a></div>
+    <div class="card"><i class="fab fa-youtube"></i><div>Dúvidas Frequentes (FAQ)</div><a href="https://www.youtube.com/watch?v=abcd1254" target="_blank">Assistir</a></div>
+    <div class="card"><i class="fab fa-youtube"></i><div>Uso Responsável dos Recursos</div><a href="https://www.youtube.com/watch?v=abcd1255" target="_blank">Assistir</a></div>
+    <div class="card"><i class="fab fa-youtube"></i><div>Regras de Pagamento</div><a href="https://www.youtube.com/watch?v=abcd1256" target="_blank">Assistir</a></div>
+    <div class="card"><i class="fab fa-youtube"></i><div>Casos de Sucesso</div><a href="https://www.youtube.com/watch?v=abcd1257" target="_blank">Assistir</a></div>
+  </div>
+</section>
+
+
+    </main>
+
+    <script>
+      const slidersData = {
+        apresentacao: [
+          `📘 <strong>Boas-Vindas ao Minicurso de Suprimento de Fundos</strong><br />
+      Seja muito bem-vindo(a) ao Minicurso de Suprimento de Fundos, promovido pela <strong>Secretaria de Planejamento, Coordenação e Finanças do Tribunal de Justiça do Estado do Pará (TJPA)</strong>.<br /><br />
+      Esta jornada de capacitação foi pensada para fortalecer a eficiência administrativa e garantir o correto uso dos recursos públicos no âmbito do Poder Judiciário.<br /><br />
+      Ficamos felizes em contar com sua participação e desejamos uma experiência de aprendizado rica, objetiva e transformadora.`,
+
+          `🎯 <strong>Finalidade e Objetivo do Curso</strong><br />
+  O objetivo do minicurso é capacitar servidores(as) e colaboradores(as) quanto aos procedimentos legais, administrativos e operacionais relacionados ao Suprimento de Fundos, com foco nos seguintes eixos:
+  <ul>
+    <li>✔️ Compreensão dos fundamentos legais;</li>
+    <li>✔️ Correta solicitação, aplicação e prestação de contas;</li>
+    <li>✔️ Responsabilidades dos gestores e supridos;</li>
+    <li>✔️ Boas práticas e prevenção de falhas.</li>
+  </ul>
+  Com isso, o TJPA busca promover transparência, agilidade e responsabilidade fiscal, assegurando o bom uso do recurso público.`,
+
+          `🧭 <strong>Quem Somos</strong><br />
+      A iniciativa é coordenada pela <strong>Secretaria de Planejamento, Coordenação e Finanças</strong>, sob a liderança dos gestores:
+      <br /><br />
+      <strong>Miguel Lucivaldo Alves Santos</strong><br />
+      Secretário de Planejamento, Coordenação e Finanças
+      <br /><br />
+      <strong>Anailton Paulo de Alencar</strong><br />
+      Secretário Adjunto
+      <br /><br />
+      A SEPLAN atua estrategicamente para garantir a excelência na gestão orçamentária, financeira e patrimonial do TJPA, promovendo capacitações, otimizando processos e apoiando a inovação na Administração Pública.`,
+
+          `👥 <strong>Equipe Operacional do Serviço de Suprimento de Fundos</strong><br />
+      A condução prática das atividades de Suprimento de Fundos no TJPA é realizada por uma equipe técnica dedicada, comprometida com a transparência, agilidade e conformidade nas etapas de execução e prestação de contas:
+      <br /><br />
+      <strong>Fábio Pereira de Freitas</strong><br />Chefe do Serviço de Suprimento de Fundos<br /><br />
+      <strong>André Evaristo Bezerra Lourenço</strong><br />Execução e Pagamento<br /><br />
+      <strong>Regeane Kelly Holanda do Carmo</strong><br />Execução e Pagamento<br /><br />
+      <strong>Roziani Rodrigues Mendonça Lopes</strong><br />Prestação de Contas<br /><br />
+      <strong>Jaires Costa Sarraf</strong><br />Prestação de Contas
+      <br /><br />
+      Essa equipe atua diretamente no apoio aos(as) servidores(as) supridos(as), prestando orientações, validando solicitações e acompanhando todas as etapas do processo com responsabilidade e compromisso com o interesse público.`,
+
+          `🗂️ <strong>Estrutura do Curso</strong><br />
+      O minicurso é composto por <strong>4 módulos temáticos</strong>, apresentados em formato dinâmico e interativo:
+      <ul>
+        <li><strong>Apresentação:</strong> Contexto institucional e fundamentos do Suprimento de Fundos.</li>
+        <li><strong>Solicitação:</strong> Etapas e requisitos para pedir Suprimento de Fundos.</li>
+        <li><strong>Execução:</strong> Aplicação correta dos recursos e cuidados essenciais.</li>
+        <li><strong>Prestação de Contas:</strong> Procedimentos para comprovar gastos e evitar glosas.</li>
+      </ul>
+      Cada módulo contém perguntas e respostas, exemplos práticos, e ao final, materiais de apoio para download.`,
+
+          `📞 <strong>Contato e Suporte</strong><br />
+      Em caso de dúvidas, sugestões ou dificuldades, nossa equipe está à disposição:
+      <br /><br />
+      📧 <strong>E-mail institucional:</strong><br />
+      <a href="mailto:suprimento@tjpa.jus.br">suprimento@tjpa.jus.br</a>
+      <br /><br />
+      📞 <strong>Contato direto:</strong><br />
+      Plataforma Microsoft Teams
+      <br /><br />
+      🌐 <strong>Plataforma Oficial:</strong><br />
+      <a href="https://www.tjpa.jus.br/PortalExterno/institucional/Secretaria-de-Planejamento--Coordenacao-e-Financas/225-Apresentacao.xhtml" target="_blank" rel="noopener">
+        www.tjpa.jus.br - Secretaria de Planejamento
+      </a>`,
+
+          `📂 <strong>Material de Apoio</strong><br />Disponível na aba Execução após login.`,
+
+          `👥 <strong>Equipe Técnica</strong><br />Equipe da SEPLAN e apoio da DCF.`,
+
+          `📝 <strong>Avaliação</strong><br />Haverá avaliação online ao final do curso.`,
+
+          `✅ <strong>Certificação</strong><br />Certificados digitais emitidos pela ESM.`,
+        ],
+
+        solicitacao: [
+          "📑 <strong>Documentação Necessária</strong><br />RG, CPF, dados bancários e justificativa formal.",
+          "🗂️ <strong>Tipos de Despesas Permitidas</strong><br />Material de consumo, pequenos reparos, transporte local.",
+          "🚫 <strong>Despesas Proibidas</strong><br />Pagamento de pessoal, material permanente, serviços contínuos.",
+          "⏱️ <strong>Prazos de Solicitação</strong><br />Até o dia 10 de cada mês.",
+          "📄 <strong>Formulário de Solicitação</strong><br />Disponível na intranet em formato PDF editável.",
+          "🧾 <strong>Exemplos de Preenchimento</strong><br />Confira modelos prontos para não errar.",
+          "💰 <strong>Limite de Valores</strong><br />R$ 8.000,00 mensais por servidor.",
+          "🔐 <strong>Aprovação da Chefia</strong><br />Solicitação válida apenas com assinatura da chefia.",
+          "📦 <strong>Suprimento Emergencial</strong><br />Autorizado em situações urgentes.",
+          "📤 <strong>Envio Digital</strong><br />Encaminhamento via SEI ou e-mail institucional.",
+        ],
+        execucao: [
+          "🛒 <strong>Aquisições Permitidas</strong><br />Somente itens aprovados previamente.",
+          "💳 <strong>Formas de Pagamento</strong><br />Dinheiro ou cartão de suprimento TJPA.",
+          "🧾 <strong>Exigência de Nota Fiscal</strong><br />Obrigatória, com CNPJ e descrição clara.",
+          "📅 <strong>Prazo para Execução</strong><br />Até 30 dias após o repasse do valor.",
+          "📸 <strong>Registro Fotográfico</strong><br />Recomendado para obras, reformas ou manutenções.",
+          "🔍 <strong>Acompanhamento da SEPLAN</strong><br />Relatórios periódicos são avaliados pela equipe.",
+          "🚛 <strong>Transporte e Logística</strong><br />Custos devem ser planejados e justificados.",
+          "🛠️ <strong>Serviços Terceirizados</strong><br />Permitido apenas com contrato simplificado.",
+          "📘 <strong>Manual do Executor</strong><br />Disponível para download em PDF.",
+          "🧑‍💻 <strong>Relatório Parcial</strong><br />Necessário quando execução ultrapassa 20 dias.",
+        ],
+        prestacao: [
+          "📥 <strong>Envio de Prestação</strong><br />Até 5 dias úteis após término da execução.",
+          "📎 <strong>Documentos Obrigatórios</strong><br />Notas fiscais, recibos, relatório detalhado.",
+          "📅 <strong>Prazos de Análise</strong><br />Até 10 dias úteis após recebimento.",
+          "❌ <strong>Inconsistências Frequentes</strong><br />Notas ilegíveis, falta de justificativa, valores divergentes.",
+          "📤 <strong>Plataforma de Envio</strong><br />SEI ou formulário online padronizado.",
+          "📚 <strong>Manual de Prestação</strong><br />Consulte o guia completo para evitar erros.",
+          "📩 <strong>Comunicação com Fiscal</strong><br />Utilize sempre o e-mail institucional.",
+          "🔁 <strong>Devoluções e Reajustes</strong><br />Emitidos quando há saldo ou erro de execução.",
+          "🔒 <strong>Arquivamento de Documentos</strong><br />Responsabilidade do servidor por 5 anos.",
+          "✅ <strong>Aprovação Final</strong><br />Após validação, libera-se nova solicitação.",
+        ],
+      };
+
+      const showTab = (id) => {
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((tab) => tab.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+      };
+
+      const renderSliders = () => {
+        Object.keys(slidersData).forEach((sectionId) => {
+          const container = document.getElementById(`slider-${sectionId}`);
+          const slidesHTML = slidersData[sectionId]
+            .map(
+              (text, i) =>
+                `<div class="slide ${i === 0 ? "active" : ""}">${text}</div>`
+            )
+            .join("");
+          const counterHTML = `<div class="counter" id="counter-${sectionId}"></div>`;
+          const buttonsHTML = `<div class="slider-buttons"><button onclick="prevSlide('${sectionId}')">❮</button><button onclick="nextSlide('${sectionId}')">❯</button></div>`;
+          const dotsHTML = `<div class="dots" id="dots-${sectionId}"></div>`;
+          const speakerButton = `<button class="speaker-button" onclick="readSlideContent('${sectionId}')" title="Ler conteúdo"><i class="fas fa-volume-up"></i></button>`;
+container.innerHTML = speakerButton + slidesHTML + buttonsHTML + dotsHTML + counterHTML;
+
+        });
+      };
+
+      const initSliders = () => {
+        renderSliders();
+        document.querySelectorAll(".slider").forEach((slider) => {
+          const slides = slider.querySelectorAll(".slide");
+          const dotsContainer = slider.querySelector(".dots");
+          const sliderId = slider.id.replace("slider-", "");
+          slides.forEach((_, i) => {
+            const dot = document.createElement("span");
+            dot.className = "dot";
+            if (i === 0) dot.classList.add("active");
+            dot.onclick = () => showSlide(sliderId, i);
+            dotsContainer.appendChild(dot);
+          });
+          updateCounter(sliderId, 0, slides.length);
+        });
+      };
+
+      const showSlide = (sliderId, index) => {
+        const slider = document.getElementById(`slider-${sliderId}`);
+        const slides = slider.querySelectorAll(".slide");
+        const dots = slider.querySelectorAll(".dot");
+        slides.forEach((s) => s.classList.remove("active"));
+        dots.forEach((d) => d.classList.remove("active"));
+        slides[index].classList.add("active");
+        dots[index].classList.add("active");
+        updateCounter(sliderId, index, slides.length);
+      };
+
+      const nextSlide = (sliderId) => {
+        const slider = document.getElementById(`slider-${sliderId}`);
+        const slides = slider.querySelectorAll(".slide");
+        let activeIndex = [...slides].findIndex((s) =>
+          s.classList.contains("active")
+        );
+        let next = (activeIndex + 1) % slides.length;
+        showSlide(sliderId, next);
+      };
+
+      const prevSlide = (sliderId) => {
+        const slider = document.getElementById(`slider-${sliderId}`);
+        const slides = slider.querySelectorAll(".slide");
+        let activeIndex = [...slides].findIndex((s) =>
+          s.classList.contains("active")
+        );
+        let prev = (activeIndex - 1 + slides.length) % slides.length;
+        showSlide(sliderId, prev);
+      };
+
+      const updateCounter = (sliderId, current, total) => {
+        const counter = document.getElementById(`counter-${sliderId}`);
+        counter.textContent = `Slide ${current + 1} de ${total}`;
+      };
+
+      window.onload = initSliders;
+
+      const readSlideContent = (sliderId) => {
+  const slider = document.getElementById(`slider-${sliderId}`);
+  const activeSlide = slider.querySelector(".slide.active");
+  const textToRead = activeSlide.innerText;
+
+  const utterance = new SpeechSynthesisUtterance(textToRead);
+  utterance.lang = "pt-BR";
+  speechSynthesis.cancel(); // Para evitar sobreposição
+  speechSynthesis.speak(utterance);
+};
+
+    </script>
+  </body>
+</html>
